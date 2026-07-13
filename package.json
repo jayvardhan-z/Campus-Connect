@@ -1,0 +1,11 @@
+{
+  "name": "campus-connect-system",
+  "version": "1.0.0",
+  "description": "Campus Connect System Root",
+  "scripts": {
+    "dev:backend": "npm --prefix backend run dev",
+    "dev:frontend": "npm --prefix frontend run dev",
+    "dev": "npm run dev:backend & npm run dev:frontend",
+    "start": "npm run dev"
+  }
+}

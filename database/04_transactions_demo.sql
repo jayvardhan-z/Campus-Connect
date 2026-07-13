@@ -1,0 +1,2 @@
+-- Database transactions demo scripts (PostgreSQL SQL/PLpgSQL)
+-- Will showcase concurrency control, locking, and transaction isolation levels in subsequent phases.

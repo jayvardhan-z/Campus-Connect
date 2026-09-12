@@ -9,6 +9,8 @@ router.use(authenticate);
 router.use(requireRole('student'));
 
 router.get('/', getProfile);
+router.get('/profile', getProfile);
 router.put('/', updateProfile);
+router.put('/profile', updateProfile);
 
 export default router;

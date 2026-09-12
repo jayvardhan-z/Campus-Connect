@@ -33,16 +33,22 @@ app.use(cookieParser());
 // Rate Limiting
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 10, // limit each IP to 10 auth requests per windowMs
-  message: 'Too many authentication attempts from this IP, please try again after 15 minutes',
+  max: process.env.NODE_ENV === 'production' ? 10 : 1000, // relaxed for development
+  message: {
+    status: 'fail',
+    message: 'Too many authentication attempts from this IP, please try again after 15 minutes'
+  },
   standardHeaders: true,
   legacyHeaders: false,
 });
 
 const apiLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // limit each IP to 100 requests per windowMs
-  message: 'Too many requests from this IP, please try again after 15 minutes',
+  max: process.env.NODE_ENV === 'production' ? 100 : 5000, // relaxed for development
+  message: {
+    status: 'fail',
+    message: 'Too many requests from this IP, please try again after 15 minutes'
+  },
   standardHeaders: true,
   legacyHeaders: false,
 });

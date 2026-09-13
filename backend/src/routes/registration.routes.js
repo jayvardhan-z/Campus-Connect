@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { 
-  getMyRegistrations, 
+  getRegistrationStatus, 
   getEventParticipants, 
   createRegistration, 
   removeRegistration 
@@ -12,8 +12,8 @@ const router = Router();
 
 router.use(authenticate);
 
-// Student registration history and actions
-router.get('/my', requireRole('student'), getMyRegistrations);
+// Student registration status and actions
+router.get('/status/:eventId', requireRole('student'), getRegistrationStatus);
 router.post('/:eventId', requireRole('student'), createRegistration);
 router.delete('/:eventId', requireRole('student'), removeRegistration);
 

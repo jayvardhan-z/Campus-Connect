@@ -63,7 +63,6 @@ CREATE TABLE events (
     total_seats INTEGER NOT NULL CHECK (total_seats > 0),
     remaining_seats INTEGER NOT NULL CHECK (remaining_seats >= 0 AND remaining_seats <= total_seats),
     status event_status NOT NULL DEFAULT 'active',
-    is_demo BOOLEAN NOT NULL DEFAULT false,
     -- ON DELETE SET NULL: Deleting the admin user who created the event retains the event in the catalog with creator set to null for attendance audit records.
     created_by UUID REFERENCES users(id) ON DELETE SET NULL,
     created_at TIMESTAMPTZ DEFAULT NOW(),

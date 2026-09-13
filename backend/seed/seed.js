@@ -96,24 +96,7 @@ async function main() {
   console.log('Seeding 120 events...');
   const createdEvents = [];
 
-  // Seed the special is_demo=true event for Concurrency Lab
-  const demoEvent = await prisma.event.create({
-    data: {
-      clubId: clubs[0].id,
-      title: 'Demo Concurrency Event',
-      description: 'Special concurrency testing event',
-      venue: 'Lab Room 404',
-      eventDate: new Date(),
-      totalSeats: 20,
-      remainingSeats: 1,
-      status: 'active',
-      isDemo: true,
-      createdById: admins[0].id
-    }
-  });
-  createdEvents.push(demoEvent);
-
-  for (let i = 1; i < 120; i++) {
+  for (let i = 0; i < 120; i++) {
     const club = clubs[i % clubs.length];
     const isCancelled = i % 100 >= 85; // 85% active, 15% cancelled
     const dateOffset = Math.floor(Math.random() * 120) - 60; // +- 60 days
@@ -125,14 +108,13 @@ async function main() {
     const event = await prisma.event.create({
       data: {
         clubId: club.id,
-        title: `${club.name} Event ${i}`,
-        description: `Description for event ${i} hosted by ${club.name}.`,
+        title: `${club.name} Event ${i + 1}`,
+        description: `Description for event ${i + 1} hosted by ${club.name}.`,
         venue: `Hall ${i % 5 + 1}`,
         eventDate,
         totalSeats,
         remainingSeats: totalSeats,
         status: isCancelled ? 'cancelled' : 'active',
-        isDemo: false,
         createdById: admins[i % admins.length].id
       }
     });
@@ -144,8 +126,8 @@ async function main() {
   const registrations = [];
   const registeredSet = new Set();
 
-  const popularEvents = createdEvents.filter(e => e.status === 'active' && !e.isDemo).slice(0, 5);
-  const otherEvents = createdEvents.filter(e => e.status === 'active' && !e.isDemo).slice(5);
+  const popularEvents = createdEvents.filter(e => e.status === 'active').slice(0, 5);
+  const otherEvents = createdEvents.filter(e => e.status === 'active').slice(5);
 
   // Skew registrations to popular events (up to 150-200 registrations each)
   for (const event of popularEvents) {
@@ -198,7 +180,6 @@ async function main() {
   // Update remaining seats for events
   console.log('Updating events remaining_seats fields...');
   for (const event of createdEvents) {
-    if (event.isDemo) continue;
     const activeCount = registrations.filter(r => r.eventId === event.id && r.status === 'registered').length;
     await prisma.event.update({
       where: { id: event.id },

@@ -96,7 +96,6 @@ model Event {
   totalSeats     Int            @map("total_seats") @db.Integer
   remainingSeats Int            @map("remaining_seats") @db.Integer
   status         EventStatus    @default(active)
-  isDemo         Boolean        @default(false) @map("is_demo")
   createdById    String?        @map("created_by") @db.Uuid
   createdBy      User?          @relation(fields: [createdById], references: [id], onDelete: SetNull)
   createdAt      DateTime       @default(now()) @map("created_at") @db.Timestamptz

@@ -1,16 +1,13 @@
--- Indexes for optimized user lookup and authentication
-CREATE INDEX idx_users_email ON users(email);
+-- =============================================================================
+-- CAMPUS CONNECT SYSTEM - DATABASE PERFORMANCE INDEXES
+-- Note: users(email) and registrations(event_id, user_id) are automatically
+-- indexed by PostgreSQL via their respective UNIQUE constraints.
+-- =============================================================================
 
--- Indexes for event querying and filtering
+-- Indexes for event querying, filtering, and sorting
 CREATE INDEX idx_events_event_date ON events(event_date);
 CREATE INDEX idx_events_club_id ON events(club_id);
-
--- Indexes for registration lookups (student history and event roster checks)
-CREATE INDEX idx_registrations_user_id ON registrations(user_id);
-CREATE INDEX idx_registrations_event_id ON registrations(event_id);
-
--- Composite index to support natural composite UNIQUE constraint lookup pathway
-CREATE INDEX idx_registrations_composite ON registrations(event_id, user_id);
-
--- Composite index to support event list filtering and sorting by status and date
 CREATE INDEX idx_events_status_date ON events(status, event_date);
+
+-- Index for student registration lookups (student dashboard and history)
+CREATE INDEX idx_registrations_user_id ON registrations(user_id);

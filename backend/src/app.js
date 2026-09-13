@@ -12,9 +12,7 @@ import clubRouter from './routes/club.routes.js';
 import eventRouter from './routes/event.routes.js';
 import announcementRouter from './routes/announcement.routes.js';
 import registrationRouter from './routes/registration.routes.js';
-import concurrencyLabRouter from './routes/concurrency-lab.routes.js';
 import dashboardRouter from './routes/dashboard.routes.js';
-import queryOptimizerRouter from './routes/query-optimizer.routes.js';
 import reportsRouter from './routes/reports.routes.js';
 
 const app = express();
@@ -64,9 +62,7 @@ app.use('/api/clubs', clubRouter);
 app.use('/api/events', eventRouter);
 app.use('/api/announcements', announcementRouter);
 app.use('/api/registrations', registrationRouter);
-app.use('/api/concurrency-lab', concurrencyLabRouter);
 app.use('/api/dashboard', dashboardRouter);
-app.use('/api/admin', queryOptimizerRouter);
 app.use('/api/reports', reportsRouter);
 
 // Health check route

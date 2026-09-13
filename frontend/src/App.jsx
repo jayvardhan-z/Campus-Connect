@@ -20,8 +20,6 @@ import AdminDashboardPage from './pages/admin/DashboardPage';
 import AdminEventsManagePage from './pages/admin/EventsManagePage';
 import AdminParticipantsPage from './pages/admin/ParticipantsPage';
 import AdminAnnouncementsPage from './pages/admin/AnnouncementsPage';
-import AdminConcurrencyLabPage from './pages/admin/ConcurrencyLabPage';
-import AdminQueryOptimizerPage from './pages/admin/QueryOptimizerPage';
 
 // Shared Pages
 import NotFoundPage from './pages/shared/NotFoundPage';
@@ -76,8 +74,6 @@ function MainApp() {
               <Route path="/admin/events" element={<AdminEventsManagePage />} />
               <Route path="/admin/events/:id/participants" element={<AdminParticipantsPage />} />
               <Route path="/admin/announcements" element={<AdminAnnouncementsPage />} />
-              <Route path="/admin/concurrency-lab" element={<AdminConcurrencyLabPage />} />
-              <Route path="/admin/query-optimizer" element={<AdminQueryOptimizerPage />} />
             </Route>
 
             {/* 404 Route */}

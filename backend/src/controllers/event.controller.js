@@ -115,13 +115,12 @@ export const getEvents = asyncHandler(async (req, res, next) => {
       e.total_seats, 
       e.remaining_seats, 
       e.status, 
-      e.is_demo, 
       e.created_by, 
       e.created_at, 
       e.updated_at,
       c.name AS club_name,
       c.category AS club_category,
-      (SELECT COUNT(*)::INTEGER FROM registrations r WHERE r.event_id = e.id AND r.status = 'registered') AS registration_count
+      (e.total_seats - e.remaining_seats) AS registration_count
     FROM events e
     INNER JOIN clubs c ON e.club_id = c.id
     ${whereClause}
@@ -143,7 +142,6 @@ export const getEvents = asyncHandler(async (req, res, next) => {
     totalSeats: row.total_seats,
     remainingSeats: row.remaining_seats,
     status: row.status,
-    isDemo: row.is_demo,
     createdById: row.created_by,
     createdAt: row.created_at,
     updatedAt: row.updated_at,

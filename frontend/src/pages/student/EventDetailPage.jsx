@@ -16,21 +16,13 @@ export default function StudentEventDetailPage() {
   const fetchDetails = async () => {
     setLoading(true);
     try {
-      const [eventRes, myRegsRes] = await Promise.all([
+      const [eventRes, statusRes] = await Promise.all([
         api.get(`/events/${id}`),
-        api.get('/reports/student-summary')
+        api.get(`/registrations/status/${id}`)
       ]);
 
       setEvent(eventRes.data.data);
-      
-      // Determine if registered for this event
-      const myRegs = myRegsRes.data.data?.myRegistrations || [];
-      const match = myRegs.find(r => r.event_id === id);
-      if (match) {
-        setRegistrationStatus(match.registration_status);
-      } else {
-        setRegistrationStatus('none');
-      }
+      setRegistrationStatus(statusRes.data.data?.status || 'none');
     } catch (err) {
       setError('Failed to load event details.');
     } finally {

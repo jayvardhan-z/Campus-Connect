@@ -6,10 +6,7 @@ export async function registerForEvent(eventId, userId) {
   try {
     await client.query('BEGIN');
     
-    // Row lock: this SELECT ... FOR UPDATE blocks any other transaction from reading/modifying this
-    // exact event row until this transaction commits or rolls back. This is what makes the seat
-    // check-then-decrement sequence atomic under concurrency — without it, two transactions can both
-    // read remaining_seats=1 before either writes, and both think they got the last seat.
+    // Row lock: SELECT ... FOR UPDATE ensures atomicity and prevents overbooking
     const { rows } = await client.query(
       'SELECT remaining_seats, status FROM events WHERE id = $1 FOR UPDATE', 
       [eventId]
@@ -22,21 +19,27 @@ export async function registerForEvent(eventId, userId) {
       throw new AppError('Event is full', 400);
     }
 
-    // Duplicate registration check (also backed by the UNIQUE(event_id,user_id) constraint as a
-    // second line of defense — catch 23505 below)
-    const dup = await client.query(
-      'SELECT id FROM registrations WHERE event_id = $1 AND user_id = $2 AND status = $3',
-      [eventId, userId, 'registered']
+    // Check existing registration (and allow re-activation if previously cancelled)
+    const existing = await client.query(
+      'SELECT id, status FROM registrations WHERE event_id = $1 AND user_id = $2 FOR UPDATE',
+      [eventId, userId]
     );
-    if (dup.rows.length) {
-      throw new AppError('Already registered', 409);
-    }
 
-    // Insert registration record
-    await client.query(
-      'INSERT INTO registrations (event_id, user_id, status) VALUES ($1, $2, $3)',
-      [eventId, userId, 'registered']
-    );
+    if (existing.rows.length) {
+      if (existing.rows[0].status === 'registered') {
+        throw new AppError('Already registered', 409);
+      }
+      // Re-activate previously cancelled registration
+      await client.query(
+        'UPDATE registrations SET status = $1, registered_at = NOW() WHERE id = $2',
+        ['registered', existing.rows[0].id]
+      );
+    } else {
+      await client.query(
+        'INSERT INTO registrations (event_id, user_id, status) VALUES ($1, $2, $3)',
+        [eventId, userId, 'registered']
+      );
+    }
     
     // Decrement remaining seats
     await client.query(

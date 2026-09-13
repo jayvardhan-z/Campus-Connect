@@ -31,8 +31,6 @@ export default function Navbar() {
                 <Link to="/admin/dashboard" className="hover:text-indigo-400 transition-colors text-sm font-medium">Dashboard</Link>
                 <Link to="/admin/events" className="hover:text-indigo-400 transition-colors text-sm font-medium">Manage Events</Link>
                 <Link to="/admin/announcements" className="hover:text-indigo-400 transition-colors text-sm font-medium">Announcements</Link>
-                <Link to="/admin/concurrency-lab" className="hover:text-indigo-400 transition-colors text-sm font-medium">Concurrency Lab</Link>
-                <Link to="/admin/query-optimizer" className="hover:text-indigo-400 transition-colors text-sm font-medium">Query Optimizer</Link>
               </>
             )}
             
